@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from 'react-modal';
 import { connect } from 'react-redux';
+import TaskForm from '../TaskForm/TaskForm';
 
 const customStyles = {
   content: {
@@ -20,16 +21,17 @@ const mapStateToProps = ({ modal: { modalIsOpen } }) => ({ modalIsOpen });
 
 const mapDispatchToProps = dispatch => ({
   closeModal: () => dispatch({ type: 'CLOSE_MODAL', payload: { modalIsOpen: false } }),
+  formSubmit: values => dispatch({ type: 'CREATE_TASK', payload: values }),
 });
 
-const ModalWrapper = ({ modalIsOpen, closeModal, children }) => (
+const ModalWrapper = ({ modalIsOpen, closeModal, formSubmit, children }) => (
   <Modal
     isOpen={modalIsOpen}
     onRequestClose={closeModal}
     style={customStyles}
     contentLabel="Example Modal"
   >
-    {children}
+    <TaskForm formSubmit={formSubmit} />
   </Modal>
 );
 

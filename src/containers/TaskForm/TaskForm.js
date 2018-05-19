@@ -1,13 +1,13 @@
 import React from 'react';
 import { withFormik } from 'formik';
 
-const InnerForm = ({ /* titulo, descripcion, duracion */
+let taskId = 0;
+const TaskForm = ({
   values,
   errors,
   touched,
   handleChange,
   handleSubmit,
-  isSubmitting,
 }) => (
   <form onSubmit={handleSubmit}>
     <input
@@ -23,17 +23,39 @@ const InnerForm = ({ /* titulo, descripcion, duracion */
       name="description"
       onChange={handleChange}
       value={values.description}
+      style={{ resize: 'none' }}
     />
     {touched.description && errors.description && <div>{errors.description}</div>}
     <br />
-    <button type="submit" disabled={isSubmitting}>
+    <input
+      type="radio"
+      name="duration"
+      value="short"
+      onChange={handleChange}
+      checked={values.duration === 'short'}
+    /> 30mins or less<br />
+    <input
+      type="radio"
+      name="duration"
+      value="medium"
+      onChange={handleChange}
+      checked={values.duration === 'medium'}
+    /> 30 - 60mins<br />
+    <input
+      type="radio"
+      name="duration"
+      value="long"
+      onChange={handleChange}
+      checked={values.duration === 'long'}
+    /> Longer than 60mins<br />
+    <button type="submit">
       Create Task
     </button>
   </form>
 );
 
 const MyForm = withFormik({
-  mapPropsToValues: props => ({ title: '', description: '' }),
+  mapPropsToValues: props => ({ title: '', description: '', duration: 'short' }),
   validate: (values, props) => {
     const errors = {};
     if (!values.title) {
@@ -45,12 +67,12 @@ const MyForm = withFormik({
     values,
     {
       props,
-      setSubmitting,
       setErrors /* setValues, setStatus, and other goodies */,
     }
   ) => {
-    console.log(values);
+    props.formSubmit({ ...values, id: taskId });
+    taskId += 1;
   },
-})(InnerForm);
+})(TaskForm);
 
 export default MyForm;

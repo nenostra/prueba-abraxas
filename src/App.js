@@ -1,18 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // import TaskContainer from './components/TaskContainer/TaskContainer';
-// import AddTask from './components/AddTask/AddTask';
 import './App.css';
-import ModalWrapper from './containers/ModalWrapper';
+import ModalWrapper from './containers/ModalWrapper/ModalWrapper';
+import TaskList from './containers/TaskList/TaskList';
 
 const App = ({ openModal }) => (
   <div className="App">
     <button onClick={openModal}>
       modal
     </button>
-    <ModalWrapper>
-      HOLAS
-    </ModalWrapper>
+    <TaskList />
+    <ModalWrapper />
   </div>
 );
 
