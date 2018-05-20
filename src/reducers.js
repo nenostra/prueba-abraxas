@@ -1,5 +1,5 @@
 export const modal = (state = { modalIsOpen: false }, action) => {
-  const { type, payload } = action;
+  const { type } = action;
   switch (type) {
     case ('OPEN_MODAL'):
       return { modalIsOpen: true };
@@ -22,6 +22,7 @@ export const tasks = (state = [], action) => {
           started: false,
           timeLeft: payload.duration,
           inProgress: state.length === 0,
+          running: false,
           completed: false,
         },
       ];
