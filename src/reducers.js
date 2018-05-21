@@ -14,7 +14,7 @@ export const modal = (state = { modalIsOpen: false }, action) => {
 export const tasks = (state = [], action) => {
   const { type, payload } = action;
   switch (type) {
-    case ('CREATE_TASK'):
+    case ('TASK_CREATION_SUCCESS'):
       return [
         ...state,
         {
