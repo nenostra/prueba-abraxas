@@ -7,14 +7,29 @@ import Task from '../../components/Task/Task';
 const mapStateToProps = ({ tasks }) => ({ tasks });
 
 const mapDispatchToProps = dispatch => ({
-  startTask: values => dispatch({ type: 'CREATE_TASK', payload: values }),
-  editTask: () => dispatch({ type: 'CLOSE_MODAL', payload: { modalIsOpen: false } }),
-  deleteTask: values => dispatch({ type: 'CREATE_TASK', payload: values }),
-  setInProgress: values => dispatch({ type: 'CREATE_TASK', payload: values }),
+  startTask: () => dispatch({ type: 'START_TASK' }),
+  editTask: values => dispatch({ type: 'STOP_TASK', payload: values }),
+  deleteTask: values => dispatch({ type: 'DELETE_TASK', payload: values }),
+  setInProgress: values => dispatch({ type: 'SET_TASK_IN_PROGRESS', payload: values }),
 });
 
-const TaskList = ({ tasks }) =>
-  tasks.map(task => <Task key={task.id} {...task} />);
+const TaskList = ({
+  tasks,
+  startTask,
+  editTask,
+  deleteTask,
+  setInProgress
+}) =>
+  tasks.map(task => (
+    <Task
+      key={task.id}
+      {...task}
+      startTask={startTask}
+      editTask={editTask}
+      deleteTask={deleteTask}
+      setInProgress={setInProgress}
+    />
+  ));
 
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object).isRequired,
