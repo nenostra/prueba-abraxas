@@ -5,6 +5,14 @@ import { ajax } from 'rxjs/ajax';
 
 const endpoint = 'http://localhost:8080/tasks/';
 
+const getTasksEpic = action$ =>
+  action$.pipe(
+    ofType('HOME'),
+    switchMap(() =>
+      ajax.get(endpoint).pipe(map(values =>
+        ({ type: 'TASK_FETCH_SUCCESS', payload: values.response })))),
+  );
+
 const createTaskEpic = action$ =>
   action$.pipe(
     ofType('CREATE_TASK'),
@@ -30,4 +38,5 @@ const timerEpic = action$ =>
 export const rootEpic = combineEpics(
   createTaskEpic,
   timerEpic,
+  getTasksEpic,
 );

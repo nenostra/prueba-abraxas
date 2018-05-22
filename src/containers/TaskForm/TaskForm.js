@@ -1,7 +1,6 @@
 import React from 'react';
 import { withFormik } from 'formik';
 
-let taskId = 0; // SACAR A ACTION CREATOR!
 const TaskForm = ({
   values,
   errors,
@@ -67,11 +66,10 @@ const MyForm = withFormik({
     values,
     {
       props,
-      setErrors /* setValues, setStatus, and other goodies */,
-    }
+      setErrors, /* setValues, setStatus, and other goodies */
+    },
   ) => {
-    props.formSubmit({ ...values, id: taskId });
-    taskId += 1;
+    props.formSubmit({ ...values });
   },
 })(TaskForm);
 

@@ -26,6 +26,8 @@ export const running = (state = false, action) => {
 export const tasks = (state = [], action) => {
   const { type, payload } = action;
   switch (type) {
+    case ('TASK_FETCH_SUCCESS'):
+      return payload;
     case ('TASK_CREATION_SUCCESS'):
       return [
         ...state,

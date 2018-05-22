@@ -1,21 +1,28 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import persistState from 'redux-localstorage';
+// import persistState from 'redux-localstorage';
 import { createEpicMiddleware } from 'redux-observable';
+import { connectRoutes } from 'redux-first-router';
+import createHistory from 'history/createBrowserHistory';
 import * as reducers from './reducers';
 import { rootEpic } from './epics';
 
-const rootReducer = combineReducers({ ...reducers });
+const routesMap = {
+  HOME: '/',
+};
+
+const history = createHistory();
+const { reducer, middleware, enhancer } = connectRoutes(history, routesMap);
+const rootReducer = combineReducers({ ...reducers, location: reducer });
 
 const epicMiddleware = createEpicMiddleware(rootEpic);
-// const middlewares = applyMiddleware(middleware, epicMiddleware, logger);
-const middlewares = applyMiddleware(epicMiddleware);
+const middlewares = applyMiddleware(middleware, epicMiddleware);
 
-/* eslint-disable no-underscore-dangle */
 const store = createStore(
   rootReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  compose(persistState(), middlewares), // TODO:pause timer when loading state from browser, siempre primer elem
+  // compose(persistState(), middlewares),
+  compose(enhancer, middlewares),
+  // TODO:pause timer when loading state from browser, siempre primer elem
 );
-/* eslint-enable */
 
 export default store;

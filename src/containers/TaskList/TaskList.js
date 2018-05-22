@@ -18,11 +18,11 @@ const TaskList = ({
   startTask,
   editTask,
   deleteTask,
-  setInProgress
+  setInProgress,
 }) =>
   tasks.map(task => (
     <Task
-      key={task.id}
+      key={task._id}
       {...task}
       startTask={startTask}
       editTask={editTask}

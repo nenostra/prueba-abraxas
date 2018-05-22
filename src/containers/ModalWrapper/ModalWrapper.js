@@ -21,7 +21,7 @@ const mapStateToProps = ({ modal: { modalIsOpen } }) => ({ modalIsOpen });
 
 const mapDispatchToProps = dispatch => ({
   closeModal: () => dispatch({ type: 'CLOSE_MODAL', payload: { modalIsOpen: false } }),
-  formSubmit: values => dispatch({ type: 'TASK_CREATION_SUCCESS', payload: values }),
+  formSubmit: values => dispatch({ type: 'CREATE_TASK', payload: values }),
 });
 
 const ModalWrapper = ({ modalIsOpen, closeModal, formSubmit, children }) => (
