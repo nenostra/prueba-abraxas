@@ -1,21 +1,18 @@
 import React from 'react';
-import { connect } from 'react-redux';
-// import TaskContainer from './components/TaskContainer/TaskContainer';
 import './App.css';
+import OpenModalButton from './containers/OpenModalButton/OpenModalButton';
 import ModalWrapper from './containers/ModalWrapper/ModalWrapper';
 import TaskList from './containers/TaskList/TaskList';
 
-const App = ({ openModal }) => (
+const App = () => (
   <div className="App">
-    <button onClick={openModal}>
-      modal
-    </button>
+    <OpenModalButton
+      modalType="create"
+      content="Create Modal"
+    />
     <TaskList />
     <ModalWrapper />
   </div>
 );
 
-export default connect(
-  null,
-  dispatch => ({ openModal: () => dispatch({ type: 'OPEN_MODAL', payload: { modalIsOpen: true } }) }),
-)(App);
+export default App;

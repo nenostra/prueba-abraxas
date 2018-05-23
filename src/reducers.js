@@ -1,8 +1,8 @@
 export const modal = (state = { modalIsOpen: false }, action) => {
-  const { type } = action;
+  const { type, payload } = action;
   switch (type) {
     case ('OPEN_MODAL'):
-      return { modalIsOpen: true };
+      return { modalIsOpen: true, modalType: payload.modalType, id: payload.id };
     case ('CLOSE_MODAL'):
     case ('TASK_CREATION_SUCCESS'):
       return { modalIsOpen: false };
@@ -40,6 +40,8 @@ export const tasks = (state = [], action) => {
           completed: false,
         },
       ];
+    case ('TASK_FETCH_FAIL'):
+    case ('TASK_CREATION_FAIL'):
     default:
       return state;
   }

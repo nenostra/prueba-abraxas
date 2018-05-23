@@ -1,5 +1,10 @@
 import React from 'react';
 import { withFormik } from 'formik';
+import { connect } from 'react-redux';
+
+const mapDispatchToProps = dispatch => ({
+  formSubmit: (actionType, payload) => dispatch({ type: actionType, payload }),
+});
 
 const TaskForm = ({
   values,
@@ -48,13 +53,14 @@ const TaskForm = ({
       checked={values.duration === 'long'}
     /> Longer than 60mins<br />
     <button type="submit">
-      Create Task
+      Save
     </button>
   </form>
 );
 
 const MyForm = withFormik({
-  mapPropsToValues: props => ({ title: '', description: '', duration: 'short' }),
+  mapPropsToValues: ({ task }) =>
+    ({ title: task.title || '', description: task.description || '', duration: task.duration || 'short' }),
   validate: (values, props) => {
     const errors = {};
     if (!values.title) {
@@ -69,8 +75,14 @@ const MyForm = withFormik({
       setErrors, /* setValues, setStatus, and other goodies */
     },
   ) => {
-    props.formSubmit({ ...values });
+    const actionType = Object.keys(props.task).length === 0
+      ? 'CREATE_TASK'
+      : 'EDIT_TASK';
+    const payload = actionType === 'CREATE_TASK'
+      ? { ...values }
+      : { ...props.task, ...values };
+    props.formSubmit(actionType, payload);
   },
 })(TaskForm);
 
-export default MyForm;
+export default connect(null, mapDispatchToProps)(MyForm);
