@@ -1,6 +1,6 @@
 import { combineEpics, ofType } from 'redux-observable';
-import { Observable, of, from, merge, fromEvent, timer } from 'rxjs';
-import { map, switchMap, mergeMap, takeUntil, tap, ignoreElements, catchError } from 'rxjs/operators';
+import { of, timer } from 'rxjs';
+import { map, switchMap, mergeMap, takeUntil, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
 const endpoint = 'http://localhost:8080/tasks/';
@@ -50,6 +50,16 @@ const editTaskEpic = action$ =>
       )),
   );
 
+const deleteTaskEpic = action$ =>
+  action$.pipe(
+    ofType('DELETE_TASK'),
+    mergeMap(({ payload }) =>
+      ajax.delete(`${endpoint}${payload}`).pipe(
+        validateErrorZeroHelper('TASK_DELETE_SUCCESS', 'TASK_DELETE_FAIL'),
+        catchError(() => of({ type: 'TASK_DELETE_FAIL' })),
+      )),
+  );
+
 const timerEpic = action$ =>
   action$.pipe(
     ofType('START_TASK'),
@@ -62,7 +72,8 @@ const timerEpic = action$ =>
 
 export const rootEpic = combineEpics(
   createTaskEpic,
-  timerEpic,
   getTasksEpic,
   editTaskEpic,
+  deleteTaskEpic,
+  timerEpic,
 );

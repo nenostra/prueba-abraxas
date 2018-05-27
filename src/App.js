@@ -3,6 +3,7 @@ import './App.css';
 import OpenModalButton from './containers/OpenModalButton/OpenModalButton';
 import ModalWrapper from './containers/ModalWrapper/ModalWrapper';
 import TaskList from './containers/TaskList/TaskList';
+import Timer from './components/Timer/Timer';
 
 const App = () => (
   <div className="App">
@@ -10,6 +11,7 @@ const App = () => (
       modalType="create"
       content="Create Modal"
     />
+    <Timer />
     <TaskList />
     <ModalWrapper />
   </div>

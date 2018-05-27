@@ -11,15 +11,16 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    height: 200,
-    width: 200,
   },
 };
 
 Modal.setAppElement('#root');
 
 const mapStateToProps = ({ tasks, modal: { modalIsOpen, modalType, id } }) =>
-  ({ task: tasks.reduce((acc, task) => (task._id === id ? task : acc), {}), modalIsOpen, modalType });
+  ({
+    task: tasks.reduce((acc, task) =>
+      (task._id === id ? task : acc), {}), modalIsOpen, modalType 
+  });
 
 const mapDispatchToProps = dispatch => ({
   closeModal: () => dispatch({ type: 'CLOSE_MODAL' }),

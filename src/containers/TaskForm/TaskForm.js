@@ -6,6 +6,12 @@ const mapDispatchToProps = dispatch => ({
   formSubmit: (actionType, payload) => dispatch({ type: actionType, payload }),
 });
 
+const durationMap = {
+  short: 1800,
+  medium: 3600,
+  long: 7200,
+}
+
 const TaskForm = ({
   values,
   errors,
@@ -51,7 +57,23 @@ const TaskForm = ({
       value="long"
       onChange={handleChange}
       checked={values.duration === 'long'}
-    /> Longer than 60mins<br />
+    /> 60 - 120mins<br />
+    <input
+      type="radio"
+      name="duration"
+      value=""
+      onChange={handleChange}
+      checked={values.duration === ''}
+    />
+    Custom Duration: <input
+      type="text"
+      name="customDuration"
+      onChange={handleChange}
+      value={values.customDuration}
+      disabled={values.duration !== ''}
+      placeholder="mm:ss"
+    /><br />
+    {touched.customDuration && errors.customDuration && <div>{errors.customDuration}</div>}
     <button type="submit">
       Save
     </button>
@@ -60,11 +82,35 @@ const TaskForm = ({
 
 const MyForm = withFormik({
   mapPropsToValues: ({ task }) =>
-    ({ title: task.title || '', description: task.description || '', duration: task.duration || 'short' }),
-  validate: (values, props) => {
+    ({
+      title: task.title || '',
+      description: task.description || '',
+      duration: task.duration || '',
+      customDuration: task.customDuration || '',
+    }),
+  validate: (values) => {
+    const twoHours = 2 * 60 * 60;
     const errors = {};
     if (!values.title) {
       errors.title = 'Required';
+    }
+    if (!values.description) {
+      errors.description = 'Required';
+    }
+    if (!values.duration && !values.customDuration) {
+      errors.customDuration = 'Required';
+    }
+    if (!values.duration && values.customDuration) {
+      const timeArr = values.customDuration.split(':');
+      if (timeArr.length !== 2) {
+        errors.customDuration = 'Wrong Format';
+      } else {
+        const [mins, secs] = timeArr;
+        const totalSeconds = (Number(mins) * 60) + Number(secs);
+        if (totalSeconds > twoHours) {
+          errors.customDuration = 'Must be less than 2 hours';
+        }
+      }
     }
     return errors;
   },
@@ -72,15 +118,18 @@ const MyForm = withFormik({
     values,
     {
       props,
-      setErrors, /* setValues, setStatus, and other goodies */
     },
   ) => {
+    const { duration } = values;
+    const [mins, secs] = values.customDuration.split(':');
+    const durationInSeconds = durationMap[duration] || (Number(mins) * 60) + Number(secs);
+
     const actionType = Object.keys(props.task).length === 0
       ? 'CREATE_TASK'
       : 'EDIT_TASK';
     const payload = actionType === 'CREATE_TASK'
-      ? { ...values }
-      : { ...props.task, ...values };
+      ? { ...values, duration: durationInSeconds }
+      : { ...props.task, ...values, duration: durationInSeconds };
     props.formSubmit(actionType, payload);
   },
 })(TaskForm);

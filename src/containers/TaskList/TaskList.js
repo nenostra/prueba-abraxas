@@ -4,26 +4,41 @@ import { connect } from 'react-redux';
 import Task from '../../components/Task/Task';
 
 // Probar mover connect un nivel arriba como ejemplo redux todo
-const mapStateToProps = ({ tasks }) => ({ tasks });
+const mapStateToProps = ({ inProgress, tasks }) => ({ tasks, activeTaskId: inProgress.taskId });
 
 const mapDispatchToProps = dispatch => ({
-  startTask: () => dispatch({ type: 'START_TASK' }),
-  setInProgress: values => dispatch({ type: 'SET_TASK_IN_PROGRESS', payload: values }),
+  setInProgress: task => () => dispatch({
+    type: 'SET_TASK_IN_PROGRESS',
+    payload: { taskId: task._id, timeLeft: task.timeLeft || task.duration, duration: task.duration },
+  }),
 });
 
 const TaskList = ({
   tasks,
-  startTask,
+  activeTaskId,
   setInProgress,
 }) =>
-  tasks.map(task => (
-    <Task
-      key={task._id}
-      {...task}
-      startTask={startTask}
-      setInProgress={setInProgress}
-    />
-  ));
+  tasks.reduce((acc, task) => (
+    task._id === activeTaskId
+      ? [
+        <div>
+          Active Task:
+          <Task
+            key={task._id}
+            {...task}
+          />
+        </div>,
+        ...acc,
+      ]
+      : [
+        ...acc,
+        <Task
+          key={task._id}
+          {...task}
+          setInProgress={setInProgress(task)}
+        />,
+      ]
+  ), []);
 
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object).isRequired,
