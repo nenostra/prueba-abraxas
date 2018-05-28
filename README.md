@@ -1,4 +1,4 @@
-git clone\n
+git clone
 cd to app folder
 run npm install
 run npm start
